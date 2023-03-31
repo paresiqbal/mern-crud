@@ -3,7 +3,8 @@ import { WorkoutModel } from "../models/workoutModel.js";
 
 // get all workout
 const getWorkout = async (req, res) => {
-  const workout = await WorkoutModel.find({}).sort({ craetedAt: -1 });
+  const user_id = req.user._id;
+  const workout = await WorkoutModel.find({ user_id }).sort({ craetedAt: -1 });
 
   res.status(200).json(workout);
 };
@@ -46,7 +47,9 @@ const createWorkout = async (req, res) => {
   }
   // add doc to db
   try {
-    const workout = await WorkoutModel.create({ title, reps, load });
+    const user_id = req.user._id;
+
+    const workout = await WorkoutModel.create({ title, reps, load, user_id });
     res.status(200).json(workout);
   } catch (error) {
     res.json(error);
